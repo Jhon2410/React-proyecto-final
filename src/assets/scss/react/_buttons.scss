@@ -1,0 +1,39 @@
+.btn{
+  .btn-inner--icon{
+    margin-right: 4px;
+  }
+}
+.btn + .btn {
+  margin-left: 4px;
+}
+.btn-hover , small{
+  margin-top: 5px;
+  padding:15px;
+  border-radius: 3px;
+}
+small:hover{
+  color: rgb(1, 45, 148);
+}
+
+#particles-js canvas{
+  position:absolute;
+  top:0;
+  width: 100%;
+  height: 100vh !important;
+  z-index: 1;
+  background: url("https://acegif.com/wp-content/gif/outerspace-67.gif") no-repeat #000;
+  background-size: cover;
+
+}
+.bg-gradient-info {
+  overflow: auto;
+}
+
+#cardL , #cardR { 
+ z-index: 100;
+}
+
+
+#cardR  #cardR > a:hover{
+  filter: brightness(0.5);
+}
