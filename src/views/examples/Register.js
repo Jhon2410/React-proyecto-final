@@ -12,8 +12,34 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import Swal from 'sweetalert2'
+import {registrarUsuario} from "../../services/index"
 
 const Register = () => {
+
+     
+  const registrar=async(e)=>{
+    e.preventDefault();
+    const res = await registrarUsuario({name : e.target[0].value , mail : e.target[1].value , password : e.target[2].value});
+    if(res.status===200){
+      if(res.data.success){
+        localStorage.setItem("Token", res.data.token) ; window.location.reload()
+      }else{
+        Swal.fire({
+          title: res.data.msg,
+          icon: 'error',
+        })
+      }
+    }else{
+      Swal.fire({
+        title: "error en el sistema.",
+        icon: 'error',
+        closeButton: 'Aceptar',
+        closeButtonColor : "#0f0"
+      })
+    }
+  }
+
   return (
     <>
       <Col lg="6" md="8">
@@ -22,7 +48,7 @@ const Register = () => {
             <div className="text-center text-muted mb-4">
               <small>Sign up with credentials</small>
             </div>
-            <Form role="form">
+            <Form role="form" onSubmit={(e)=>{registrar(e)}}>
               <FormGroup>
                 <InputGroup className="input-group-alternative mb-3">
                   <InputGroupAddon addonType="prepend">
@@ -30,7 +56,7 @@ const Register = () => {
                       <i className="ni ni-hat-3" />
                     </InputGroupText>
                   </InputGroupAddon>
-                  <Input placeholder="Name" type="text" />
+                  <Input placeholder="Name" type="text"  required/>
                 </InputGroup>
               </FormGroup>
               <FormGroup>
@@ -44,6 +70,7 @@ const Register = () => {
                     placeholder="Email"
                     type="email"
                     autoComplete="new-email"
+                    required
                   />
                 </InputGroup>
               </FormGroup>
@@ -58,6 +85,7 @@ const Register = () => {
                     placeholder="Password"
                     type="password"
                     autoComplete="new-password"
+                    required
                   />
                 </InputGroup>
               </FormGroup>
@@ -81,7 +109,7 @@ const Register = () => {
                     >
                       <span className="text-muted">
                         I agree with the{" "}
-                        <a href="#pablo" onClick={(e) => e.preventDefault()}>
+                        <a href="#" onClick={(e) => e.preventDefault()}>
                           Privacy Policy
                         </a>
                       </span>
@@ -90,7 +118,7 @@ const Register = () => {
                 </Col>
               </Row>
               <div className="text-center">
-                <Button className="mt-4 mb-3" color="primary" type="button">
+                <Button className="mt-4 mb-3" color="primary" type="submit">
                   Create account
                 </Button>
               </div>

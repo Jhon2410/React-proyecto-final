@@ -6,6 +6,7 @@ import Login from "views/examples/Login.js";
 import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
 import Home from "components/Home/Home";
+import Usuarios from "views/examples/usuarios";
 
 var routes = [
   {
@@ -13,6 +14,13 @@ var routes = [
     name: "Home",
     icon: "ni ni-tv-2 text-primary",
     component: Home,
+    layout: "/admin",
+  },
+  {
+    path: "/usuarios",
+    name: "Usuarios",
+    icon: "ni ni-app text-info",
+    component: Usuarios,
     layout: "/admin",
   },
   {
@@ -43,5 +51,6 @@ var routes = [
     component: Register,
     layout: "/auth",
   },
+  
 ];
 export default routes;

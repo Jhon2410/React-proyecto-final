@@ -12,9 +12,9 @@ import {
   Row,
   Col,
 } from "reactstrap";
-
+import {loguearUsuario} from "../../services/index"
 import GoogleLogin from 'react-google-login';
-
+import Swal from 'sweetalert2'
 const Login = () => {
 
   const responseGoogle = (response) => {
@@ -27,6 +27,27 @@ const Login = () => {
     console.log(response);
   }
    
+  const loguear=async(e)=>{
+    e.preventDefault();
+    const res = await loguearUsuario({mail : e.target[0].value , password : e.target[1].value});
+    if(res.status===200){
+      if(res.data.success){
+        localStorage.setItem("Token", res.data.token) ; window.location.reload()
+      }else{
+        Swal.fire({
+          title: res.data.msg,
+          icon: 'error',
+        })
+      }
+    }else{
+      Swal.fire({
+        title: "error en el sistema.",
+        icon: 'error',
+        closeButton: 'Aceptar',
+        closeButtonColor : "#0f0"
+      })
+    }
+  }
   
   return (
     <>
@@ -70,7 +91,7 @@ const Login = () => {
             <div className="text-center text-muted mb-4">
               <small>Or sign in with credentials</small>
             </div>
-            <Form role="form">
+            <Form role="form" onSubmit={(e)=>{loguear(e)}}>
               <FormGroup className="mb-3">
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
@@ -82,6 +103,7 @@ const Login = () => {
                     placeholder="Email"
                     type="email"
                     autoComplete="new-email"
+                    required
                   />
                 </InputGroup>
               </FormGroup>
@@ -96,6 +118,8 @@ const Login = () => {
                     placeholder="Password"
                     type="password"
                     autoComplete="new-password"
+                    required
+
                   />
                 </InputGroup>
               </FormGroup>
@@ -113,7 +137,7 @@ const Login = () => {
                 </label>
               </div>
               <div className="text-center">
-                <Button className="my-4" color="primary" type="button" onClick={()=>{ localStorage.setItem("Token", "a") ; window.location.reload()}} >
+                <Button className="my-4" color="primary" type="submit"  >
                   Sign in
                 </Button>
               </div>
