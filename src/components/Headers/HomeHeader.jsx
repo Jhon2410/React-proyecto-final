@@ -3,16 +3,26 @@ import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
 import Carousel from "../Carousel/Carousel";
 
 import { connect } from "react-redux"
+import { cargarCortes } from "services";
 
 
 const HomeHeader = ({idioma , changeIdioma}) => {
   const [resource , setResource]  =useState(idioma);
-  useEffect(()=>{
-  },[])
+
+  const [cortes, setCortes] = useState([])
+    useEffect(()=>{
+        (async()=>{
+            const res = await cargarCortes()
+            if(res.status === 200) {
+                setCortes(res.data.msg)
+            }
+        })()
+    },[])
+
   return (
     <>
       <div className=" pb-2 pt-2 pt-md-8">
-      <Carousel></Carousel>
+      <Carousel cortes={cortes}></Carousel>
        
       </div>
     </>

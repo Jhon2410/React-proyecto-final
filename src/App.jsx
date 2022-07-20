@@ -7,6 +7,8 @@ import { Provider } from "react-redux";
 import Store from "./store/index"
 import { validar } from "services";
 
+import "./assets/css/Chat.css"
+
 document.addEventListener('onhaschange', function(){alert(window.location.pathname)}, false);
 window.addEventListener('storage', (e) => {
   window.location.reload();

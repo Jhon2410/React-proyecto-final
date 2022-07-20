@@ -1,10 +1,25 @@
+import HorizontalLinearStepper from "components/Stepper/Steeper";
 import React, { useEffect, useState } from "react";
 import { Container } from "reactstrap";
 import { obtenerListaUsuarios } from "services";
 import Swal from 'sweetalert2'
 
-const Usuarios = () => {
+const initialState ={
+  name : "",
+  description : "",
+  price : 0, 
+  subPhotos: [],
+  mainPhoto: "", 
+}
+const Cortes = () => {
   const [listaUsuarios, setListaUsuarios] = useState([]);
+  const [add, setAdd] = useState(false);
+  const [newCorte, setNewCorte] = useState(initialState)
+  const [enviar, setEnviar] = useState(false)
+
+  useEffect(()=> {
+    setNewCorte(initialState)
+  },[add])
 
   useEffect(() => {
     (async () => {
@@ -17,6 +32,9 @@ const Usuarios = () => {
   }, []);
 
   const editar = async(usuario) => {
+    
+
+    
 
     const { value: formValues } = await Swal.fire({
         title: `<p>   ${usuario.name ? usuario.name : ''}  -  ${usuario._id}</p>` ,
@@ -66,7 +84,7 @@ const Usuarios = () => {
   const listar = listaUsuarios.map((item, idx) => {
     return (
       <tr key={item.id}>
-        <td>
+        <td key={item.id}>
           <div className="d-flex align-items-center">
             <img
               src="https://mdbootstrap.com/img/new/avatars/8.jpg"
@@ -102,10 +120,10 @@ const Usuarios = () => {
     <Container className="mx--auto bg-gradient-info" fluid>
     
       <div className="text-dark pt-3 mb-3" style={{minHeight : "100vh" }}>
-    
+      {add ? <HorizontalLinearStepper props={[setAdd, newCorte, setNewCorte]}></HorizontalLinearStepper> : <button className="btn btn-primary mx-auto  " style={{ width : "100px", borderRadius : "15px",marginTop : "100px" ,padding: "15px"}} onClick={()=>setAdd(true)}>Add</button>}
         <table
           className="table align-middle mb-0 bg-white"
-          style={{ marginTop: "75px", paddingTop: "45px" }}
+          style={{ marginTop: "55px", paddingTop: "45px" }}
         >
           <thead className="bg-light">
             <tr>
@@ -123,4 +141,4 @@ const Usuarios = () => {
   );
 };
 
-export default Usuarios;
+export default Cortes;
