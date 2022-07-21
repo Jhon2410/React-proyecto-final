@@ -22,8 +22,11 @@ const HomeHeader = ({idioma , changeIdioma}) => {
   return (
     <>
       <div className=" pb-2 pt-2 pt-md-8">
+        {cortes.length !== 0  ?  
       <Carousel cortes={cortes}></Carousel>
-       
+      :
+      <h2 className="text-center text-white">No hay cortes <a className="btn btn-primary" href="./Cortes">Add</a></h2>
+        }       
       </div>
     </>
   );

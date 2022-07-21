@@ -12,7 +12,7 @@ const Card = ({cortes})=>{
                      <p className="card-text" style={{height :"75px" , overflow : "hidden"}}>{cortes.description}</p>
                 </div>
                 <div className="card-footer">
-                    <button className="btn btn-primary">Ver mas</button>
+                    <button className="btn btn-primary" onClick={()=>window.location.href="./info/" + cortes.peluquero[0].id }>Contactar</button>
                 </div>
                 </div>
     )

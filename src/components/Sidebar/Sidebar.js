@@ -54,10 +54,11 @@ const Sidebar = (props) => {
   const createLinks = (routes) => {
     return routes.map((prop, key) => {
       if(prop.layout!=="/auth"){
+        prop.path = prop.path ==="/info/:usuarios?" ? "/info" : prop.path
         return (
           <NavItem key={key}>
             <NavLink
-              to={prop.layout + prop.path}
+              to={prop.layout + prop.path }
               tag={NavLinkRRD}
               onClick={closeCollapse}
               activeClassName="active"

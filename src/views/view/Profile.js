@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -10,9 +11,27 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import { getInfoUser } from "services";
+import { getBaseUrl } from "services";
+import Swal from "sweetalert2";
 
 
 const Profile = () => {
+
+  const [usuario , setUsuario] = useState({})
+  useEffect(()=>{
+    (async()=>{
+      const res = await getInfoUser()
+      if(res.status === 200){
+        setUsuario(res.data.msg)
+         console.log(res.data.msg)
+
+      }else{
+        Swal.fire("Error" , res.data.msg , "error")
+      }
+    })()
+  },[])
+  
   return (
     <>
    
@@ -23,14 +42,12 @@ const Profile = () => {
               <Row className="justify-content-center">
                 <Col className="order-lg-2" lg="3">
                   <div className="card-profile-image">
-                    <a href="#pablo" onClick={(e) => e.preventDefault()}>
+                    <a href="#" onClick={(e) => e.preventDefault()}>
                       <img
                         alt="..."
                         className="rounded-circle"
-                        src={
-                          require("../../assets/img/theme/team-4-800x800.jpg")
-                            .default
-                        }
+                        style={{width: '150px', height: '150px', objectFit : "cover"}}
+                        src={usuario.name ? getBaseUrl() +  "img/profile/" + usuario.foto : ""}
                       />
                     </a>
                   </div>
@@ -41,16 +58,16 @@ const Profile = () => {
                   <Button
                     className="mr-4"
                     color="info"
-                    href="#pablo"
+                    href="#"
                     onClick={(e) => e.preventDefault()}
                     size="sm"
                   >
-                    Connect
+                    Add
                   </Button>
                   <Button
                     className="float-right"
                     color="default"
-                    href="#pablo"
+                    href="#"
                     onClick={(e) => e.preventDefault()}
                     size="sm"
                   >
@@ -63,46 +80,40 @@ const Profile = () => {
                   <div className="col">
                     <div className="card-profile-stats d-flex justify-content-center mt-md-5">
                       <div>
-                        <span className="heading">22</span>
+                        <span className="heading">{usuario.amigos ? usuario.amigos.length : ''}</span>
                         <span className="description">Friends</span>
                       </div>
                       <div>
-                        <span className="heading">10</span>
+                        <span className="heading">{usuario.fotos ? usuario.fotos.length : ''}</span>
                         <span className="description">Photos</span>
                       </div>
                       <div>
-                        <span className="heading">89</span>
-                        <span className="description">Comments</span>
+                        <span className="heading">{usuario.publicaciones ? usuario.publicaciones.length : ''}</span>
+                        <span className="description">Posts</span>
                       </div>
                     </div>
                   </div>
                 </Row>
                 <div className="text-center">
                   <h3>
-                    Jessica Jones
-                    <span className="font-weight-light">, 27</span>
+                  {usuario.name ? usuario.name : ''}
+                    {/* <span className="font-weight-light">, 27</span> */}
                   </h3>
                   <div className="h5 font-weight-300">
                     <i className="ni location_pin mr-2" />
-                    Bucharest, Romania
+                    {usuario.estado ==="activo" ? <span className="bg-success text-white p-1 rounded">{usuario.estado}</span> : <h5 className="bg-danger text-white  p-2 rounded">{usuario.estado}</h5> }
                   </div>
                   <div className="h5 mt-4">
                     <i className="ni business_briefcase-24 mr-2" />
-                    Solution Manager - Creative Tim Officer
+                   Rol :  {usuario.rol ? usuario.rol : ''}
+                   <hr></hr>
+                  {usuario.rol === "usuario" ? <button className="btn btn-primary">Solicitar rol peluquero</button> : null}
                   </div>
                   <div>
                     <i className="ni education_hat mr-2" />
-                    University of Computer Science
+                    
                   </div>
                   <hr className="my-4" />
-                  <p>
-                    Ryan — the name taken by Melbourne-raised, Brooklyn-based
-                    Nick Murphy — writes, performs and records all of his own
-                    music.
-                  </p>
-                  <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                    Show more
-                  </a>
                 </div>
               </CardBody>
             </Card>
@@ -117,11 +128,11 @@ const Profile = () => {
                   <Col className="text-right" xs="4">
                     <Button
                       color="primary"
-                      href="#pablo"
+                      href="#"
                       onClick={(e) => e.preventDefault()}
                       size="sm"
                     >
-                      Settings
+                      Update
                     </Button>
                   </Col>
                 </Row>
@@ -143,9 +154,9 @@ const Profile = () => {
                           </label>
                           <Input
                             className="form-control-alternative"
-                            defaultValue="lucky.jesse"
+                            defaultValue=  {usuario.name  ? usuario.name :  ""}
                             id="input-username"
-                            placeholder="Username"
+                            placeholder=  {usuario.name  ? usuario.name :  ""}
                             type="text"
                           />
                         </FormGroup>
@@ -161,70 +172,9 @@ const Profile = () => {
                           <Input
                             className="form-control-alternative"
                             id="input-email"
-                            placeholder="jesse@example.com"
+                            disabled
+                            placeholder= {usuario.mail  ? usuario.mail :  ""}
                             type="email"
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col lg="6">
-                        <FormGroup>
-                          <label
-                            className="form-control-label"
-                            htmlFor="input-first-name"
-                          >
-                            First name
-                          </label>
-                          <Input
-                            className="form-control-alternative"
-                            defaultValue="Lucky"
-                            id="input-first-name"
-                            placeholder="First name"
-                            type="text"
-                          />
-                        </FormGroup>
-                      </Col>
-                      <Col lg="6">
-                        <FormGroup>
-                          <label
-                            className="form-control-label"
-                            htmlFor="input-last-name"
-                          >
-                            Last name
-                          </label>
-                          <Input
-                            className="form-control-alternative"
-                            defaultValue="Jesse"
-                            id="input-last-name"
-                            placeholder="Last name"
-                            type="text"
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                  </div>
-                  <hr className="my-4" />
-                  {/* Address */}
-                  <h6 className="heading-small text-muted mb-4">
-                    Contact information
-                  </h6>
-                  <div className="pl-lg-4">
-                    <Row>
-                      <Col md="12">
-                        <FormGroup>
-                          <label
-                            className="form-control-label"
-                            htmlFor="input-address"
-                          >
-                            Address
-                          </label>
-                          <Input
-                            className="form-control-alternative"
-                            defaultValue="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09"
-                            id="input-address"
-                            placeholder="Home Address"
-                            type="text"
                           />
                         </FormGroup>
                       </Col>
@@ -240,9 +190,9 @@ const Profile = () => {
                           </label>
                           <Input
                             className="form-control-alternative"
-                            defaultValue="New York"
+                            defaultValue={usuario.pais  ? usuario.pais :  ""}
                             id="input-city"
-                            placeholder="City"
+                            placeholder= {usuario.ciudad  ? usuario.ciudad :  ""}
                             type="text"
                           />
                         </FormGroup>
@@ -257,9 +207,9 @@ const Profile = () => {
                           </label>
                           <Input
                             className="form-control-alternative"
-                            defaultValue="United States"
+                            defaultValue={usuario.pais  ? usuario.pais :  ""}
                             id="input-country"
-                            placeholder="Country"
+                            placeholder= {usuario.pais  ? usuario.pais :  ""}
                             type="text"
                           />
                         </FormGroup>
@@ -275,14 +225,13 @@ const Profile = () => {
                           <Input
                             className="form-control-alternative"
                             id="input-postal-code"
-                            placeholder="Postal code"
+                            placeholder= {usuario.codigoPostal  ? usuario.codigoPostal :  ""}
                             type="number"
                           />
                         </FormGroup>
                       </Col>
                     </Row>
                   </div>
-                  <hr className="my-4" />
                   {/* Description */}
                   <h6 className="heading-small text-muted mb-4">About me</h6>
                   <div className="pl-lg-4">
@@ -290,10 +239,9 @@ const Profile = () => {
                       <label>About Me</label>
                       <Input
                         className="form-control-alternative"
-                        placeholder="A few words about you ..."
+                        placeholder={usuario.descripcion  ? usuario.descripcion :  ""}
                         rows="4"
-                        defaultValue="A beautiful Dashboard for Bootstrap 4. It is Free and
-                        Open Source."
+                        defaultValue={usuario.descripcion  ? usuario.descripcion :  ""}
                         type="textarea"
                       />
                     </FormGroup>

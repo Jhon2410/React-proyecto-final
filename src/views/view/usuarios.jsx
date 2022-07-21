@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "reactstrap";
+import { getBaseUrl } from "services";
 import { obtenerListaUsuarios } from "services";
 import Swal from 'sweetalert2'
 
@@ -69,9 +70,9 @@ const Usuarios = () => {
         <td>
           <div className="d-flex align-items-center">
             <img
-              src="https://mdbootstrap.com/img/new/avatars/8.jpg"
+              src={getBaseUrl() + "/img/profile/" + item.foto}
               alt=""
-              style={{ width: "45px", height: "45px" }}
+              style={{ width: "45px", height: "45px", objectFit : "cover" }}
               className="rounded-circle"
             />
             <div className="ms-3">
@@ -86,10 +87,12 @@ const Usuarios = () => {
         </td>
         <td>
           <span className="badge badge-success rounded-pill d-inline">
-            Active
+            {item.estado}
           </span>
         </td>
-        <td>Senior</td>
+        <td>
+        {item.rol}
+        </td>
         <td>
           <button type="button" onClick={()=>{ editar(listaUsuarios[idx]) }} className="btn btn-link btn-sm btn-rounded" data-toggle="modal" data-target="#exampleModalCenter">
             Edit

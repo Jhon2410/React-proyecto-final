@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 // reactstrap components
 import {
@@ -16,8 +17,24 @@ import {
   Container,
   Media,
 } from "reactstrap";
+import { getBaseUrl } from "services";
+import { getInfoUser } from "services";
+import Swal from "sweetalert2";
 
 const AdminNavbar = (props) => {
+  const [usuario , setUsuario] = useState({})
+  useEffect(()=>{
+    (async()=>{
+      const res = await getInfoUser()
+      if(res.status === 200){
+        setUsuario(res.data.msg)
+         console.log(usuario.foto)
+
+      }else{
+        Swal.fire("Error" , res.data.msg , "error")
+      }
+    })()
+  },[])
   return (
     <div >
     
@@ -44,19 +61,21 @@ const AdminNavbar = (props) => {
           <Nav className="align-items-center d-none d-md-flex" navbar>
             <UncontrolledDropdown nav>
               <DropdownToggle className="pr-0" nav>
-                <Media className="align-items-center">
-                  <span className="avatar avatar-sm rounded-circle">
+                <Media className="align-items-center" 
+                      style={{overflow: "hidden" , maxWidth: "250px",maxHeight: "250px" }}>
+                  <span className="avatar avatar-sm " 
+                      style={{objectFit : "cover" , width : "25px"  }}
+                  >
                     <img
                       alt="..."
-                      src={
-                        require("../../assets/img/theme/team-4-800x800.jpg")
-                          .default
-                      }
+                      src={usuario.foto ?  getBaseUrl() + "img/profile/" + usuario.foto : "a"}
+                      style={{objectFit : "cover" , width : "25px"  }}
+
                     />
                   </span>
                   <Media className="ml-2 d-none d-lg-block">
-                    <span className="mb-0 text-sm font-weight-bold">
-                      Jessica Jones
+                    <span className="mb-0 text-sm font-weight-bold mw-25 overflow-hidden">
+                      {usuario.name ? usuario.name : "a"}
                     </span>
                   </Media>
                 </Media>

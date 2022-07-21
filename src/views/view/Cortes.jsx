@@ -1,6 +1,9 @@
 import HorizontalLinearStepper from "components/Stepper/Steeper";
 import React, { useEffect, useState } from "react";
 import { Container } from "reactstrap";
+import { getBaseUrl } from "services";
+import { cargarCortes } from "services";
+import { getCortesUser } from "services";
 import { obtenerListaUsuarios } from "services";
 import Swal from 'sweetalert2'
 
@@ -21,6 +24,18 @@ const Cortes = () => {
     setNewCorte(initialState)
   },[add])
 
+
+  const [cortes, setCortes] = useState([])
+  useEffect(()=>{
+      (async()=>{
+          const res = await getCortesUser()
+          if(res.status === 200) {
+              console.log(res.data)
+              setCortes(res.data.msg)
+          }
+      })()
+  },[])
+
   useEffect(() => {
     (async () => {
       const res = await obtenerListaUsuarios();
@@ -31,63 +46,27 @@ const Cortes = () => {
     })();
   }, []);
 
-  const editar = async(usuario) => {
-    
-
-    
-
-    const { value: formValues } = await Swal.fire({
-        title: `<p>   ${usuario.name ? usuario.name : ''}  -  ${usuario._id}</p>` ,
-        html:`
-        <form class="d-grid">
-        <p>${usuario.mail}</p>
-        <p>Nombre : <input type="text" id="name" class="form-control" placeholder="${usuario.name}" /></p>
-        <p>Estado : <select id="estado" class="form-control">
-        <option value="desactivado">Deshabilitar</option>
-        <option value="acivado">Habilitar</option>
-        </select> </p>
-        <p> Rol : <select id="rol" class="form-control">
-        <option value="Admin">Admin</option>
-        <option value="Usuario">Usuario</option>
-        <option value="Peluquero">Peluquero</option>
-        </select> </p>
-
-        </form>
-        `,
-        showCloseButton: true,
-        showConfirmButton: true,
-        confirmButtonText : 'Actualizar',
-        confirmButtonClass : "btn btn-primary w-100 d-grid form-control",
-        confirmButtonColor : "primary",
-        preConfirm: () => {
-          return [
-            document.getElementById('name').value,
-            document.getElementById('estado').value,
-            document.getElementById('rol').value
-          ]
-        }
-       
-      })
-
-      if (formValues) {
-        const new_usuario = {
-          ...usuario, 
-          name: formValues[0]!=="" ? formValues[0] : usuario.name,
-          estado: formValues[1]!=="" ? formValues[1] : usuario.estado,
-          rol: formValues[2]!=="" ? formValues[2] : usuario.rol,
-        }
-
-        console.log(new_usuario)
-        
+  const eliminar = async(usuario) => {
+    Swal.fire({
+      title : "Alert",
+      text : "Are you sure you wanna delete this item?",
+      icon : "warning",
+      showDenyButton: true,
+      confirmButtonText: 'Yes',
+      denyButtonText: 'No',
+    }).then(res=>{
+      if(res.isConfirmed){
+        Swal.fire("Delete" , "Eliminado", "success");
       }
+    })
   };
-  const listar = listaUsuarios.map((item, idx) => {
+  const listar = cortes.map((item, idx) => {
     return (
-      <tr key={item.id}>
-        <td key={item.id}>
+      <tr key={item._id}>
+        <td key={item._id}>
           <div className="d-flex align-items-center">
             <img
-              src="https://mdbootstrap.com/img/new/avatars/8.jpg"
+              src={ getBaseUrl()+  "img/" + item.mainPhoto}
               alt=""
               style={{ width: "45px", height: "45px" }}
               className="rounded-circle"
@@ -103,14 +82,11 @@ const Cortes = () => {
           <p className="text-muted mb-0">{item._id}</p>
         </td>
         <td>
-          <span className="badge badge-success rounded-pill d-inline">
-            Active
-          </span>
+          {item.idPeluquero}
         </td>
-        <td>Senior</td>
         <td>
-          <button type="button" onClick={()=>{ editar(listaUsuarios[idx]) }} className="btn btn-link btn-sm btn-rounded" data-toggle="modal" data-target="#exampleModalCenter">
-            Edit
+          <button type="button" onClick={()=>{ eliminar(listaUsuarios[idx]) }} className="btn btn-danger btn-sm btn-rounded" data-toggle="modal" data-target="#exampleModalCenter">
+            Delete
           </button>
         </td>
       </tr>
@@ -127,10 +103,9 @@ const Cortes = () => {
         >
           <thead className="bg-light">
             <tr>
-              <th>Name</th>
+              <th>Name Product</th>
               <th>Identification</th>
-              <th>Status</th>
-              <th>Position</th>
+              <th>Id peluquero</th>
               <th>Actions</th>
             </tr>
           </thead>

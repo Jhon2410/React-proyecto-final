@@ -1,8 +1,12 @@
 import React from 'react'
+import { useParams } from 'react-router-dom';
 export const Contactar = () => {
+    let { usuarios } = useParams();
+    console.log("aaaaaaaaaaaaaaa",useParams())
   return (
         <section style={{background: "#CDC4F9" , paddingTop: "50px" , overflow: "hidden" , height : "100vh"}} >
         <div className="container py-5">
+       
         <div className="row">
       <div className="col-md-12">
 

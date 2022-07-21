@@ -20,10 +20,19 @@ const Register = () => {
      
   const registrar=async(e)=>{
     e.preventDefault();
-    const res = await registrarUsuario({name : e.target[0].value , mail : e.target[1].value , password : e.target[2].value});
+
+    const formData = new FormData();
+    formData.append("name",e.target[0].value)
+    formData.append("mail",e.target[1].value)
+    formData.append("password",e.target[2].value)
+    formData.append("foto",e.target[3].files[0])
+
+    const res = await registrarUsuario(formData);
+    console.log(res)
     if(res.status===200){
       if(res.data.success){
-        localStorage.setItem("Token", res.data.token) ; window.location.reload()
+        localStorage.setItem("Token", res.data.token) 
+        window.location.reload()
       }else{
         Swal.fire({
           title: res.data.msg,
@@ -90,10 +99,24 @@ const Register = () => {
                 </InputGroup>
               </FormGroup>
               <div className="text-muted font-italic">
-                <small>
-                  password strength:{" "}
-                  <span className="text-success font-weight-700">strong</span>
-                </small>
+              <FormGroup>
+                <InputGroup className="input-group-alternative">
+                  <InputGroupAddon addonType="prepend">
+                  <div className="input-group">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text" id="inputGroupFileAddon01"> 
+                   <i className="ni ni-image" />Photo
+               </span>
+                  </div>
+                  <div className="custom-file">
+                    <input type="file" className="custom-file-input" id="inputGroupFile01"
+                      aria-describedby="inputGroupFileAddon01" required />
+                    <label className="custom-file-label" for="inputGroupFile01">Profile photo</label>
+                  </div>
+                </div>
+                  </InputGroupAddon>
+                </InputGroup>
+              </FormGroup>
               </div>
               <Row className="my-4">
                 <Col xs="12">

@@ -1,13 +1,13 @@
 import Index from "views/Index.js";
-import Profile from "views/examples/Profile.js";
-import Maps from "views/examples/Maps.js";
-import Register from "views/examples/Register.js";
-import Login from "views/examples/Login.js";
-import Tables from "views/examples/Tables.js";
-import Icons from "views/examples/Icons.js";
+import Profile from "views/view/Profile.js";
+import Maps from "views/view/Maps.js";
+import Register from "views/view/Register.js";
+import Login from "views/view/Login.js";
+import Tables from "views/view/Tables.js";
+import Icons from "views/view/Icons.js";
 import Home from "components/Home/Home";
-import Usuarios from "views/examples/usuarios";
-import Cortes from "views/examples/Cortes";
+import Usuarios from "views/view/usuarios";
+import Cortes from "views/view/Cortes";
 import { Contactar } from "components/Contactar/Contactar";
 
 var routes = [
@@ -68,7 +68,7 @@ var routes = [
     layout: "/admin",
   },
   {
-    path: "/info",
+    path: "/info/:usuarios?",
     name: "Chat",
     icon: "ni ni-send text-pink",
     component: Contactar,

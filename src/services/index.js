@@ -18,10 +18,8 @@ const loguearUsuario = async(data)=>{
 }
 
 
-const registrarUsuario = async(data)=>{
-    const res = await axios.post(base_url + "api/auth/register",{
-        usuario : data
-    })
+const registrarUsuario = async(body)=>{
+    const res = await axios.post(base_url + "api/auth/register",body)
     console.log(res.data);
     return res;
 }
@@ -46,6 +44,24 @@ const cargarCortes =async()=>{
     return res
 }
 
+const getInfoUser =async()=>{
+    const res = await axios.get(base_url + "api/users/user/info" ,{ headers: { 'Content-Type': 'application/json' , "access-token" : localStorage.getItem('Token')}})
+    return res
+}
+
+const getCortesUser =async()=>{
+    const res = await axios.get(base_url + "api/peluqueria/cortes/info" ,{ headers: { 'Content-Type': 'application/json' , "access-token" : localStorage.getItem('Token')}})
+    return res
+}
+
+
+const deleteCorte =async(body)=>{
+    const res = await axios.post(base_url + "api/peluqueria/cortes/delete", body ,{ headers: { 'Content-Type': 'application/json' , "access-token" : localStorage.getItem('Token')}})
+    return res
+}
+
+
+
 
 const añadirCorte= async(data)=>{
     const body = new FormData();
@@ -62,5 +78,5 @@ const añadirCorte= async(data)=>{
     return res
 }
 export  {
-    loguearUsuario , registrarUsuario , validar , obtenerListaUsuarios , ActualiarInfoUsuario , cargarCortes , añadirCorte , getBaseUrl
+    loguearUsuario , registrarUsuario , validar , obtenerListaUsuarios , ActualiarInfoUsuario , cargarCortes , añadirCorte , getBaseUrl , getInfoUser , getCortesUser , deleteCorte
 }
