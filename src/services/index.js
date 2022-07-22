@@ -1,6 +1,7 @@
 const axios = require("axios");
 
-const base_url ="http://localhost:5000/";
+//const base_url="http://localhost:5000/";
+const base_url="https://backend-peluqueria-react.herokuapp.com/";
 
 const getBaseUrl =()=>{
     return base_url;
