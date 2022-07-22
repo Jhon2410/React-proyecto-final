@@ -5,8 +5,7 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { useRef } from 'react';
-import { añadirCorte } from '../../services/index';
+import { añadirCorte, getCortesUser } from '../../services/index';
 import Swal from 'sweetalert2';
 
 const steps = ['Info general', 'Galeria', 'Confirmar información'];
@@ -15,7 +14,12 @@ export default function HorizontalLinearStepper({props}) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
 
-  
+    const getCortes = async()=>{
+    const res = await getCortesUser()
+    if(res.status === 200) {
+        props[3](res.data.msg)
+    }
+}
   const step1 = (
         <div className="form-group text-center text-bold">
             <label>Name</label>
@@ -32,6 +36,8 @@ export default function HorizontalLinearStepper({props}) {
         if(res.status === 200){
             if(res.data.success){
                 Swal.fire('Success' , res.data.msg , "success")
+                await getCortes()
+
             }else{
                 Swal.fire('Error' , res.data.msg , "error")
 

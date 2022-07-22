@@ -1,6 +1,7 @@
 import HorizontalLinearStepper from "components/Stepper/Steeper";
 import React, { useEffect, useState } from "react";
 import { Container } from "reactstrap";
+import { deleteCorte } from "services";
 import { getBaseUrl } from "services";
 import { cargarCortes } from "services";
 import { getCortesUser } from "services";
@@ -20,20 +21,22 @@ const Cortes = () => {
   const [newCorte, setNewCorte] = useState(initialState)
   const [enviar, setEnviar] = useState(false)
 
-  useEffect(()=> {
+  useEffect(async()=> {
     setNewCorte(initialState)
+
   },[add])
 
 
   const [cortes, setCortes] = useState([])
+
+  const getCortes = async()=>{
+    const res = await getCortesUser()
+    if(res.status === 200) {
+        setCortes(res.data.msg)
+    }
+}
   useEffect(()=>{
-      (async()=>{
-          const res = await getCortesUser()
-          if(res.status === 200) {
-              console.log(res.data)
-              setCortes(res.data.msg)
-          }
-      })()
+    getCortes()
   },[])
 
   useEffect(() => {
@@ -46,7 +49,7 @@ const Cortes = () => {
     })();
   }, []);
 
-  const eliminar = async(usuario) => {
+  const eliminar = async(id) => {
     Swal.fire({
       title : "Alert",
       text : "Are you sure you wanna delete this item?",
@@ -54,9 +57,22 @@ const Cortes = () => {
       showDenyButton: true,
       confirmButtonText: 'Yes',
       denyButtonText: 'No',
-    }).then(res=>{
+    }).then(async(res)=>{
       if(res.isConfirmed){
-        Swal.fire("Delete" , "Eliminado", "success");
+        const res = await deleteCorte({id})
+        if(res.status === 200) {
+          if(res.data.success){
+            Swal.fire("Delete" , res.data.msg, "success");
+            await getCortes()
+
+             
+          }else{
+          Swal.fire("Error" ,res.data.msg, "error");
+
+          }
+        }else{
+          Swal.fire("Error" ,res.data.msg, "error");
+        }
       }
     })
   };
@@ -85,7 +101,7 @@ const Cortes = () => {
           {item.idPeluquero}
         </td>
         <td>
-          <button type="button" onClick={()=>{ eliminar(listaUsuarios[idx]) }} className="btn btn-danger btn-sm btn-rounded" data-toggle="modal" data-target="#exampleModalCenter">
+          <button type="button" onClick={()=>{ eliminar(cortes[idx]) }} className="btn btn-danger btn-sm btn-rounded" data-toggle="modal" data-target="#exampleModalCenter">
             Delete
           </button>
         </td>
@@ -96,7 +112,7 @@ const Cortes = () => {
     <Container className="mx--auto bg-gradient-info" fluid>
     
       <div className="text-dark pt-3 mb-3" style={{minHeight : "100vh" }}>
-      {add ? <HorizontalLinearStepper props={[setAdd, newCorte, setNewCorte]}></HorizontalLinearStepper> : <button className="btn btn-primary mx-auto  " style={{ width : "100px", borderRadius : "15px",marginTop : "100px" ,padding: "15px"}} onClick={()=>setAdd(true)}>Add</button>}
+      {add ? <HorizontalLinearStepper props={[setAdd, newCorte, setNewCorte, setCortes]}></HorizontalLinearStepper> : <button className="btn btn-primary mx-auto  " style={{ width : "100px", borderRadius : "15px",marginTop : "100px" ,padding: "15px"}} onClick={()=>setAdd(true)}>Add</button>}
         <table
           className="table align-middle mb-0 bg-white"
           style={{ marginTop: "55px", paddingTop: "45px" }}
